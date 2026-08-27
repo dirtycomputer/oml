@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OML 是一个将 12 维自陈人格测量与可选文化象征出生层分开呈现的开放实验体系。" />
+    <meta name="theme-color" content="#11131a" />
+    <title>OML · Open Meta-Life</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <header class="site-header">
+      <a class="brand" href="#assessment" data-route="assessment" aria-label="OML 首页">
+        <span class="brand-mark" aria-hidden="true">O</span>
+        <span>
+          <strong>OML</strong>
+          <small>Open Meta-Life · v0.1 candidate</small>
+        </span>
+      </a>
+      <nav class="primary-nav" aria-label="主要功能">
+        <button class="nav-button is-active" data-route="assessment">测评</button>
+        <button class="nav-button" data-route="results">报告</button>
+        <button class="nav-button" data-route="match">匹配</button>
+        <button class="nav-button" data-route="atlas">全球图谱</button>
+        <button class="nav-button" data-route="method">方法</button>
+      </nav>
+      <div class="header-status"><span class="status-dot"></span>本地计算</div>
+    </header>
+
+    <main id="main">
+      <section class="view is-active" id="assessment" data-view="assessment">
+        <div class="workspace-grid">
+          <article class="panel assessment-intro">
+            <div class="eyebrow">OML / 统一人格测量实验</div>
+            <h1>先测量行为倾向，<br />再叠加文化象征。</h1>
+            <p class="lede">144 道原创双向条目形成 12 维连续画像；出生信息只作为可关闭的象征层，最高权重 15%。结果用于自我反思，不用于诊断、招聘、信贷、司法或替代关系中的同意与安全判断。</p>
+            <div class="action-row">
+              <button class="button button-primary" id="start-assessment">开始 144 题</button>
+              <button class="button button-secondary" id="sample-report">先看示例报告</button>
+            </div>
+            <div class="metric-strip" aria-label="测评概要">
+              <div><strong>144</strong><span>原创条目</span></div>
+              <div><strong>12</strong><span>连续维度</span></div>
+              <div><strong>15%</strong><span>象征层上限</span></div>
+              <div><strong>0</strong><span>身份推断项</span></div>
+            </div>
+          </article>
+
+          <aside class="panel birth-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="kicker">可选输入</span>
+                <h2>出生象征层</h2>
+              </div>
+              <label class="switch-label">
+                <input type="checkbox" id="blend-birth" checked />
+                <span>纳入综合分</span>
+              </label>
+            </div>
+            <p class="helper">太阳黄经、四柱近似与生命路径数会生成独立象征向量。日期不会离开本设备。</p>
+            <form id="birth-form" class="field-grid">
+              <label>
+                <span>出生日期</span>
+                <input id="birth-date" type="date" min="1900-01-01" required />
+              </label>
+              <label>
+                <span>当地时间</span>
+                <input id="birth-time" type="time" value="12:00" />
+              </label>
+              <label>
+                <span>出生地 UTC 偏移</span>
+                <input id="birth-offset" type="number" min="-12" max="14" step="0.25" value="8" inputmode="decimal" />
+              </label>
+              <label>
+                <span>时间精度</span>
+                <select id="birth-precision">
+                  <option value="exact">准确</option>
+                  <option value="approximate">约略</option>
+                  <option value="unknown">未知（省略时柱）</option>
+                </select>
+              </label>
+              <button type="submit" class="button button-quiet field-span">计算象征层</button>
+            </form>
+            <div id="birth-summary" class="birth-summary empty-note" aria-live="polite">尚未计算。问卷仍可独立生成完整 OML 报告。</div>
+          </aside>
+        </div>
+
+        <section class="panel questionnaire-panel is-hidden" id="questionnaire" aria-labelledby="questionnaire-title">
+          <div class="questionnaire-head">
+            <div>
+              <span class="kicker">固定顺序 · 每页覆盖全部维度</span>
+              <h2 id="questionnaire-title">第 <span id="page-number">1</span> / 12 组</h2>
+            </div>
+            <div class="progress-cluster">
+              <span id="answer-count">已答 0 / 144</span>
+              <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="144" aria-valuenow="0">
+                <span id="progress-fill"></span>
+              </div>
+            </div>
+          </div>
+          <div class="scale-legend" aria-hidden="true"><span>1 完全不符合</span><span>3 不确定／居中</span><span>5 完全符合</span></div>
+          <div id="question-list" class="question-list"></div>
+          <p id="question-error" class="form-error" role="alert"></p>
+          <div class="question-actions">
+            <button class="button button-secondary" id="previous-page">上一组</button>
+            <button class="button button-primary" id="next-page">下一组</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="results" data-view="results">
+        <div id="results-empty" class="panel empty-state">
+          <span class="empty-orbit" aria-hidden="true">12D</span>
+          <h1>还没有可显示的画像</h1>
+          <p>完成问卷，或载入匿名示例以查看完整报告结构。</p>
+          <div class="action-row centered">
+            <button class="button button-primary" data-route="assessment">前往测评</button>
+            <button class="button button-secondary" id="sample-report-empty">载入示例</button>
+          </div>
+        </div>
+
+        <div id="results-content" class="is-hidden">
+          <section class="result-hero panel">
+            <div class="code-column">
+              <span class="kicker">你的 OML 核心代码</span>
+              <div class="oml-code" id="oml-code">—</div>
+              <p id="code-description"></p>
+              <div class="confidence-row">
+                <span id="quality-badge" class="badge"></span>
+                <span id="result-source" class="muted"></span>
+              </div>
+            </div>
+            <div class="radar-wrap">
+              <svg id="radar-chart" viewBox="0 0 420 420" role="img" aria-label="OML 十二维雷达图"></svg>
+            </div>
+            <div class="result-note">
+              <span class="kicker">如何阅读</span>
+              <p>代码只压缩 5 个最易沟通的轴；完整人格保留在 12 个连续分数中。接近 50 表示情境切换，而非“类型不明确”。</p>
+              <button class="button button-quiet" id="copy-summary">复制摘要</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div><span class="kicker">12D PROFILE</span><h2>连续维度</h2></div>
+              <span class="muted">0—100；无优劣方向</span>
+            </div>
+            <div id="dimension-bars" class="dimension-grid"></div>
+          </section>
+
+          <section class="result-grid">
+            <article class="panel">
+              <span class="kicker">CULTURAL LAYER</span>
+              <h2>出生象征签名</h2>
+              <div id="birth-result" class="empty-note">未提供出生信息，因此没有叠加文化象征层。</div>
+            </article>
+            <article class="panel">
+              <span class="kicker">INTERPRETATION</span>
+              <h2>优势与观察点</h2>
+              <div id="profile-insights" class="insight-list"></div>
+            </article>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="match" data-view="match">
+        <header class="section-header">
+          <div><span class="eyebrow">RELATIONSHIP / CONSENT FIRST</span><h1>情侣与伙伴匹配</h1></div>
+          <p>同一公式适用于异性恋、同性恋、双性恋、泛性恋、无性恋、跨性别及非二元用户。身份不参与人格推断；吸引、关系边界、同意与安全必须直接沟通。</p>
+        </header>
+        <div class="match-layout">
+          <section class="panel match-profile">
+            <div class="panel-heading"><div><span class="kicker">PROFILE A</span><h2>当前画像</h2></div><span id="match-code-a" class="mini-code">尚未生成</span></div>
+            <div id="match-a-summary" class="empty-note">先完成问卷或载入示例。</div>
+            <div class="match-fields">
+              <label><span>沟通频率偏好</span><select id="communication-a"><option value="1">很低</option><option value="2">较低</option><option value="3" selected>适中</option><option value="4">较高</option><option value="5">很高</option></select></label>
+              <label><span>关系结构</span><select id="mode-a"><option value="unsure">未确定／不适用</option><option value="mono">单偶</option><option value="open">开放式</option><option value="poly">多元关系</option></select></label>
+            </div>
+          </section>
+          <section class="panel match-profile">
+            <div class="panel-heading"><div><span class="kicker">PROFILE B</span><h2>对方 12 维</h2></div><button class="text-button" id="random-partner">生成示例</button></div>
+            <div id="partner-sliders" class="partner-sliders"></div>
+            <div class="match-fields">
+              <label><span>沟通频率偏好</span><select id="communication-b"><option value="1">很低</option><option value="2">较低</option><option value="3" selected>适中</option><option value="4">较高</option><option value="5">很高</option></select></label>
+              <label><span>关系结构</span><select id="mode-b"><option value="unsure">未确定／不适用</option><option value="mono">单偶</option><option value="open">开放式</option><option value="poly">多元关系</option></select></label>
+            </div>
+          </section>
+          <aside class="panel match-result">
+            <span class="kicker">DIALOGUE INDEX</span>
+            <div class="match-score" id="match-score">—</div>
+            <p id="match-label">准备两份画像后计算</p>
+            <button class="button button-primary full-width" id="calculate-match">计算匹配</button>
+            <div id="match-breakdown" class="match-breakdown"></div>
+            <p class="safety-note">分数表示“值得讨论的摩擦成本”，不预测爱情、忠诚或关系成败；任何安全风险都不能被高分抵消。</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="atlas" data-view="atlas">
+        <header class="section-header">
+          <div><span class="eyebrow">GLOBAL INFLUENCE ATLAS / 2026-08</span><h1>全球相近体系影响力图谱</h1></div>
+          <p>这是代表性体系的“社会影响”排序，不是真实性、文化价值或科学有效性排名。开放世界中不存在可证明完备的“所有种类”清单；同源地方分支在能合理归并时合并计算。</p>
+        </header>
+        <section class="panel methodology-strip">
+          <div><strong>35%</strong><span>跨区域覆盖</span></div><div><strong>25%</strong><span>人口接触</span></div><div><strong>20%</strong><span>历史延续</span></div><div><strong>10%</strong><span>数字可见</span></div><div><strong>10%</strong><span>社群／机构</span></div>
+        </section>
+        <section class="panel table-panel">
+          <div class="table-toolbar">
+            <div><span class="kicker">REPRESENTATIVE SYSTEMS</span><h2>影响力排名</h2></div>
+            <label class="compact-field"><span>类别</span><select id="system-filter"><option value="all">全部</option></select></label>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>排名</th><th>体系</th><th>主要文化圈</th><th>类别</th><th>证据定位</th><th class="numeric">影响分</th></tr></thead>
+              <tbody id="systems-table"></tbody>
+            </table>
+          </div>
+          <p class="table-note">分项为研究团队的 0—100 审慎估计，尚未经过独立复核；后续版本应使用多语种搜索趋势、调查样本与专家编码更新。</p>
+        </section>
+      </section>
+
+      <section class="view" id="method" data-view="method">
+        <header class="section-header">
+          <div><span class="eyebrow">OPEN SPECIFICATION / OML v0.1</span><h1>公式、映射与边界</h1></div>
+          <p>OML 不是把互不相容的体系宣称为同一真理，而是把它们投影到同一组可观察维度，并保留来源、权重和不确定性。</p>
+        </header>
+        <div class="method-grid">
+          <article class="panel formula-card">
+            <span class="formula-index">01</span><span class="kicker">问卷分</span><h2>双向条目标准化</h2>
+            <div class="formula">Q<sub>d</sub> = mean[ 25 × (r′ − 1) ]</div>
+            <p>正向题 r′ = r；反向题 r′ = 6 − r。每维 12 题（6 正、6 反），得到 0—100 连续分。</p>
+          </article>
+          <article class="panel formula-card">
+            <span class="formula-index">02</span><span class="kicker">综合分</span><h2>问卷主导融合</h2>
+            <div class="formula">S<sub>d</sub> = 0.85Q<sub>d</sub> + 0.15B<sub>d</sub></div>
+            <p>出生层 B 默认只占 15%，且可完全关闭。太阳黄经、四柱近似、阴阳五行与生命路径数各自留下可审计中间量。</p>
+          </article>
+          <article class="panel formula-card">
+            <span class="formula-index">03</span><span class="kicker">匹配分</span><h2>相似与互补并存</h2>
+            <div class="formula">M = .82P + .10C + .08R</div>
+            <p>P 为 12 维加权关系摩擦分，C 为沟通频率契合，R 为双方主动声明的关系结构兼容；身份标签权重恒为 0。</p>
+          </article>
+        </div>
+
+        <section class="panel table-panel">
+          <div class="panel-heading"><div><span class="kicker">UNIFIED CROSSWALK</span><h2>八字／星盘／MBTI 统一映射表</h2></div><span class="muted">映射表示概念邻近，不表示等价</span></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>OML 维度</th><th>大五／相关研究</th><th>MBTI 邻近轴</th><th>西方星盘象征</th><th>五行象征</th><th>统一语义</th></tr></thead>
+              <tbody id="mapping-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="method-bottom-grid">
+          <article class="panel">
+            <span class="kicker">OML CODE</span><h2>代码规则</h2>
+            <p class="large-copy"><code>CPLO-S</code> = 共处充能 C · 模式整合 P · 系统逻辑 L · 计划闭环 O · 稳定复原 S。</p>
+            <p>前四位来自社交、抽象、逻辑、结构四轴；后缀来自调节轴。其余 7 维不被代码抹去，仍在完整画像中呈现。</p>
+          </article>
+          <article class="panel boundary-card">
+            <span class="kicker">VALIDITY BOUNDARY</span><h2>当前版本能做什么</h2>
+            <ul>
+              <li>可重复、透明地计算 12 维自陈分和 OML 代码。</li>
+              <li>可作为跨文化叙事、关系对话与研究假设生成工具。</li>
+              <li>尚无代表性常模、重测信度、测量不变性或预测效度证据。</li>
+              <li>不能诊断健康、预测具体事件或替代专业占星／命理排盘。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>OML v0.1</strong><span>开放的跨文化人格实验 · 数据仅保存在浏览器</span></div>
+      <div class="footer-links">
+        <a href="./METHODOLOGY.md">完整方法</a>
+        <a href="https://github.com/dirtycomputer/oml" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://ipip.ori.org/" target="_blank" rel="noreferrer">IPIP</a>
+        <a href="https://ich.unesco.org/en/RL/ifa-divination-system-00146" target="_blank" rel="noreferrer">UNESCO Ifá</a>
+        <a href="https://gml.noaa.gov/grad/solcalc/" target="_blank" rel="noreferrer">NOAA Solar</a>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
