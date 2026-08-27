@@ -2,7 +2,7 @@
 
 OML v0.1 是一个可审计的跨文化人格实验：用 144 道原创双向条目形成 12 个连续维度，并将出生信息转换为一个可关闭、最高只占 15% 的文化象征层。
 
-在线版本：<https://dirtycomputer.github.io/oml/>
+在线版本：<https://oml-sepia.vercel.app/>
 
 ## 已实现
 
@@ -32,7 +32,8 @@ node tests.mjs
 - `app.js`：问卷、报告、匹配器、图谱和本地状态交互。
 - `index.html` / `styles.css`：无构建依赖的静态界面。
 - `METHODOLOGY.md`：公式、假设、文化边界与验证路线。
-- `.github/workflows/pages.yml`：测试通过后发布 GitHub Pages。
+- `vercel.json`：生产托管与安全响应头配置。
+- `.github/workflows/ci.yml`：每次推送后复核算法不变量。
 
 ## 重要边界
 
@@ -41,4 +42,3 @@ OML v0.1 尚未经过代表性常模、重测信度、测量不变性或预测�
 MBTI 是 The Myers-Briggs Company 及其关联权利人的商标。本项目仅做概念邻近映射，不包含或复制官方 MBTI 测验。问卷条目为 OML 原创候选条目。
 
 详见 [METHODOLOGY.md](./METHODOLOGY.md)。
-
